@@ -1,29 +1,10 @@
-/********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
- * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *
- * by the Xiph.Org Foundation http://www.xiph.org/                  *
- *                                                                  *
- ********************************************************************
-
-  function:
-  last mod: $Id: theora.h,v 1.17 2003/12/06 18:06:19 arc Exp $
-
- ********************************************************************/
-
-#ifndef _O_THEORA_H_
-#define _O_THEORA_H_
+#pragma once
 
 #ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+extern "C" {
+#endif
 
-#include <stddef.h>	/* for size_t */
+#include <stddef.h> /* for size_t */
 
 #include <ogg/ogg.h>
 
@@ -116,7 +97,6 @@ extern "C"
  * header bytes at the beginning of the Ogg page.
  */
 
-
 /** \defgroup oldfuncs Legacy pre-1.0 C API */
 /*  @{ */
 
@@ -145,16 +125,16 @@ extern "C"
  * theora/examples/ for more information.
  */
 typedef struct {
-    int   y_width;      /**< Width of the Y' luminance plane */
-    int   y_height;     /**< Height of the luminance plane */
-    int   y_stride;     /**< Offset in bytes between successive rows */
+  int y_width;  /**< Width of the Y' luminance plane */
+  int y_height; /**< Height of the luminance plane */
+  int y_stride; /**< Offset in bytes between successive rows */
 
-    int   uv_width;     /**< Width of the Cb and Cr chroma planes */
-    int   uv_height;    /**< Height of the chroma planes */
-    int   uv_stride;    /**< Offset between successive chroma rows */
-    unsigned char *y;   /**< Pointer to start of luminance data */
-    unsigned char *u;   /**< Pointer to start of Cb data */
-    unsigned char *v;   /**< Pointer to start of Cr data */
+  int            uv_width;  /**< Width of the Cb and Cr chroma planes */
+  int            uv_height; /**< Height of the chroma planes */
+  int            uv_stride; /**< Offset between successive chroma rows */
+  unsigned char *y;         /**< Pointer to start of luminance data */
+  unsigned char *u;         /**< Pointer to start of Cb data */
+  unsigned char *v;         /**< Pointer to start of Cr data */
 
 } yuv_buffer;
 
@@ -162,10 +142,10 @@ typedef struct {
  * A Colorspace.
  */
 typedef enum {
-  OC_CS_UNSPECIFIED,    /**< The colorspace is unknown or unspecified */
-  OC_CS_ITU_REC_470M,   /**< This is the best option for 'NTSC' content */
-  OC_CS_ITU_REC_470BG,  /**< This is the best option for 'PAL' content */
-  OC_CS_NSPACES         /**< This marks the end of the defined colorspaces */
+  OC_CS_UNSPECIFIED,   /**< The colorspace is unknown or unspecified */
+  OC_CS_ITU_REC_470M,  /**< This is the best option for 'NTSC' content */
+  OC_CS_ITU_REC_470BG, /**< This is the best option for 'PAL' content */
+  OC_CS_NSPACES        /**< This marks the end of the defined colorspaces */
 } theora_colorspace;
 
 /**
@@ -176,10 +156,10 @@ typedef enum {
  * exact definitions.
  */
 typedef enum {
-  OC_PF_420,    /**< Chroma subsampling by 2 in each direction (4:2:0) */
-  OC_PF_RSVD,   /**< Reserved value */
-  OC_PF_422,    /**< Horizonatal chroma subsampling by 2 (4:2:2) */
-  OC_PF_444     /**< No chroma subsampling at all (4:4:4) */
+  OC_PF_420,  /**< Chroma subsampling by 2 in each direction (4:2:0) */
+  OC_PF_RSVD, /**< Reserved value */
+  OC_PF_422,  /**< Horizonatal chroma subsampling by 2 (4:2:2) */
+  OC_PF_444   /**< No chroma subsampling at all (4:4:4) */
 } theora_pixelformat;
 
 /**
@@ -204,20 +184,20 @@ typedef enum {
  * other parameters and good default settings for the encoder parameters.
  */
 typedef struct {
-  ogg_uint32_t  width;		/**< encoded frame width  */
-  ogg_uint32_t  height;		/**< encoded frame height */
-  ogg_uint32_t  frame_width;	/**< display frame width  */
-  ogg_uint32_t  frame_height;	/**< display frame height */
-  ogg_uint32_t  offset_x;	/**< horizontal offset of the displayed frame */
-  ogg_uint32_t  offset_y;	/**< vertical offset of the displayed frame */
-  ogg_uint32_t  fps_numerator;	    /**< frame rate numerator **/
-  ogg_uint32_t  fps_denominator;    /**< frame rate denominator **/
-  ogg_uint32_t  aspect_numerator;   /**< pixel aspect ratio numerator */
-  ogg_uint32_t  aspect_denominator; /**< pixel aspect ratio denominator */
-  theora_colorspace colorspace;	    /**< colorspace */
-  int           target_bitrate;	    /**< nominal bitrate in bits per second */
-  int           quality;  /**< Nominal quality setting, 0-63 */
-  int           quick_p;  /**< Quick encode/decode */
+  ogg_uint32_t      width;              /**< encoded frame width  */
+  ogg_uint32_t      height;             /**< encoded frame height */
+  ogg_uint32_t      frame_width;        /**< display frame width  */
+  ogg_uint32_t      frame_height;       /**< display frame height */
+  ogg_uint32_t      offset_x;           /**< horizontal offset of the displayed frame */
+  ogg_uint32_t      offset_y;           /**< vertical offset of the displayed frame */
+  ogg_uint32_t      fps_numerator;      /**< frame rate numerator **/
+  ogg_uint32_t      fps_denominator;    /**< frame rate denominator **/
+  ogg_uint32_t      aspect_numerator;   /**< pixel aspect ratio numerator */
+  ogg_uint32_t      aspect_denominator; /**< pixel aspect ratio denominator */
+  theora_colorspace colorspace;         /**< colorspace */
+  int               target_bitrate;     /**< nominal bitrate in bits per second */
+  int               quality;            /**< Nominal quality setting, 0-63 */
+  int               quick_p;            /**< Quick encode/decode */
 
   /* decode only */
   unsigned char version_major;
@@ -227,26 +207,26 @@ typedef struct {
   void *codec_setup;
 
   /* encode only */
-  int           dropframes_p;
-  int           keyframe_auto_p;
-  ogg_uint32_t  keyframe_frequency;
-  ogg_uint32_t  keyframe_frequency_force;  /* also used for decode init to
+  int          dropframes_p;
+  int          keyframe_auto_p;
+  ogg_uint32_t keyframe_frequency;
+  ogg_uint32_t keyframe_frequency_force; /* also used for decode init to
                                               get granpos shift correct */
-  ogg_uint32_t  keyframe_data_target_bitrate;
-  ogg_int32_t   keyframe_auto_threshold;
-  ogg_uint32_t  keyframe_mindistance;
-  ogg_int32_t   noise_sensitivity;
-  ogg_int32_t   sharpness;
+  ogg_uint32_t keyframe_data_target_bitrate;
+  ogg_int32_t  keyframe_auto_threshold;
+  ogg_uint32_t keyframe_mindistance;
+  ogg_int32_t  noise_sensitivity;
+  ogg_int32_t  sharpness;
 
-  theora_pixelformat pixelformat;	/**< chroma subsampling mode to expect */
+  theora_pixelformat pixelformat; /**< chroma subsampling mode to expect */
 
 } theora_info;
 
 /** Codec internal state and context.
  */
-typedef struct{
+typedef struct {
   theora_info *i;
-  ogg_int64_t granulepos;
+  ogg_int64_t  granulepos;
 
   void *internal_encode;
   void *internal_decode;
@@ -272,14 +252,13 @@ typedef struct{
  * and so the length array should be treated as authoritative
  * for their length.
  */
-typedef struct theora_comment{
-  char **user_comments;         /**< An array of comment string vectors */
-  int   *comment_lengths;       /**< An array of corresponding string vector lengths in bytes */
-  int    comments;              /**< The total number of comment string vectors */
-  char  *vendor;                /**< The vendor string identifying the encoder, null terminated */
+typedef struct theora_comment {
+  char **user_comments;   /**< An array of comment string vectors */
+  int   *comment_lengths; /**< An array of corresponding string vector lengths in bytes */
+  int    comments;        /**< The total number of comment string vectors */
+  char  *vendor;          /**< The vendor string identifying the encoder, null terminated */
 
 } theora_comment;
-
 
 /**\name theora_control() codes */
 /* \anchor decctlcodes_old
@@ -413,16 +392,16 @@ typedef struct theora_comment{
 
 /*@}*/
 
-#define OC_FAULT       -1       /**< General failure */
-#define OC_EINVAL      -10      /**< Library encountered invalid internal data */
-#define OC_DISABLED    -11      /**< Requested action is disabled */
-#define OC_BADHEADER   -20      /**< Header packet was corrupt/invalid */
-#define OC_NOTFORMAT   -21      /**< Packet is not a theora packet */
-#define OC_VERSION     -22      /**< Bitstream version is not handled */
-#define OC_IMPL        -23      /**< Feature or action not implemented */
-#define OC_BADPACKET   -24      /**< Packet is corrupt */
-#define OC_NEWPACKET   -25      /**< Packet is an (ignorable) unhandled extension */
-#define OC_DUPFRAME    1        /**< Packet is a dropped frame */
+#define OC_FAULT     -1  /**< General failure */
+#define OC_EINVAL    -10 /**< Library encountered invalid internal data */
+#define OC_DISABLED  -11 /**< Requested action is disabled */
+#define OC_BADHEADER -20 /**< Header packet was corrupt/invalid */
+#define OC_NOTFORMAT -21 /**< Packet is not a theora packet */
+#define OC_VERSION   -22 /**< Bitstream version is not handled */
+#define OC_IMPL      -23 /**< Feature or action not implemented */
+#define OC_BADPACKET -24 /**< Packet is corrupt */
+#define OC_NEWPACKET -25 /**< Packet is an (ignorable) unhandled extension */
+#define OC_DUPFRAME  1   /**< Packet is a dropped frame */
 
 /**
  * Retrieve a human-readable string to identify the encoder vendor and version.
@@ -473,8 +452,7 @@ extern int theora_encode_YUVin(theora_state *t, yuv_buffer *yuv);
  * \retval -1 The encoding process has completed
  * \retval 1 Success
  */
-extern int theora_encode_packetout( theora_state *t, int last_p,
-                                    ogg_packet *op);
+extern int theora_encode_packetout(theora_state *t, int last_p, ogg_packet *op);
 
 /**
  * Request a packet containing the initial header.
@@ -558,8 +536,7 @@ extern int theora_encode_tables(theora_state *t, ogg_packet *op);
  * \note The normal usage is that theora_decode_header() be called on the
  *       first three packets of a theora logical bitstream in succession.
  */
-extern int theora_decode_header(theora_info *ci, theora_comment *cc,
-                                ogg_packet *op);
+extern int theora_decode_header(theora_info *ci, theora_comment *cc, ogg_packet *op);
 
 /**
  * Initialize a theora_state handle for decoding.
@@ -578,7 +555,7 @@ extern int theora_decode_init(theora_state *th, theora_info *c);
  * \retval 0 Success
  * \retval OC_BADPACKET \a op does not contain encoded video data
  */
-extern int theora_decode_packetin(theora_state *th,ogg_packet *op);
+extern int theora_decode_packetin(theora_state *th, ogg_packet *op);
 
 /**
  * Output the next available frame of decoded YUV data.
@@ -590,7 +567,7 @@ extern int theora_decode_packetin(theora_state *th,ogg_packet *op);
  *            considered read-only by the user.
  * \retval 0 Success
  */
-extern int theora_decode_YUVout(theora_state *th,yuv_buffer *yuv);
+extern int theora_decode_YUVout(theora_state *th, yuv_buffer *yuv);
 
 /**
  * Report whether a theora packet is a header or not
@@ -661,7 +638,7 @@ int theora_granule_shift(theora_info *ti);
  *
  * Thus function was added in the 1.0alpha4 release.
  */
-extern ogg_int64_t theora_granule_frame(theora_state *th,ogg_int64_t granulepos);
+extern ogg_int64_t theora_granule_frame(theora_state *th, ogg_int64_t granulepos);
 
 /**
  * Convert a granulepos to absolute time in seconds. The granulepos is
@@ -676,7 +653,7 @@ extern ogg_int64_t theora_granule_frame(theora_state *th,ogg_int64_t granulepos)
  *          It is not the presentation time.
  * \retval -1. The given granulepos is undefined (i.e. negative).
  */
-extern double theora_granule_time(theora_state *th,ogg_int64_t granulepos);
+extern double theora_granule_time(theora_state *th, ogg_int64_t granulepos);
 
 /**
  * Initialize a theora_info structure. All values within the given theora_info
@@ -731,8 +708,7 @@ extern void theora_comment_add(theora_comment *tc, char *comment);
  * supports this. To add such comments you will need to manipulate
  * the theora_comment structure directly.
  **/
-extern void theora_comment_add_tag(theora_comment *tc,
-                                       char *tag, char *value);
+extern void theora_comment_add_tag(theora_comment *tc, char *tag, char *value);
 
 /**
  * Look up a comment value by tag.
@@ -759,13 +735,13 @@ extern char *theora_comment_query(theora_comment *tc, char *tag, int count);
  *  over the number of instances with separate calls to
  *  theora_comment_query() to retrieve all instances in order.
  **/
-extern int   theora_comment_query_count(theora_comment *tc, char *tag);
+extern int theora_comment_query_count(theora_comment *tc, char *tag);
 
 /**
  * Clear an allocated theora_comment struct so that it can be freed.
  * \param tc An allocated theora_comment structure.
  **/
-extern void  theora_comment_clear(theora_comment *tc);
+extern void theora_comment_clear(theora_comment *tc);
 
 /**Encoder control function.
  * This is used to provide advanced control the encoding process.
@@ -775,12 +751,10 @@ extern void  theora_comment_clear(theora_comment *tc);
  *			control codes" for details.
  * \param buf    The parameters for this control code.
  * \param buf_sz The size of the parameter buffer.*/
-extern int theora_control(theora_state *th,int req,void *buf,size_t buf_sz);
+extern int theora_control(theora_state *th, int req, void *buf, size_t buf_sz);
 
 /* @} */ /* end oldfuncs doxygen group */
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* _O_THEORA_H_ */

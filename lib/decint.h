@@ -17,66 +17,55 @@
 
 #include <limits.h>
 #if !defined(_decint_H)
-# define _decint_H (1)
-# include "theora/theoradec.h"
-# include "state.h"
-# include "bitpack.h"
-# include "huffdec.h"
-# include "dequant.h"
+#  define _decint_H (1)
+#  include "bitpack.h"
+#  include "dequant.h"
+#  include "huffdec.h"
+#  include "state.h"
+#  include "theora/theoradec.h"
 
 typedef struct th_setup_info         oc_setup_info;
 typedef struct oc_dec_opt_vtable     oc_dec_opt_vtable;
 typedef struct oc_dec_pipeline_state oc_dec_pipeline_state;
 typedef struct th_dec_ctx            oc_dec_ctx;
 
-
-
 /*Decoder-specific accelerated functions.*/
-# if defined(OC_C64X_ASM)
-#  include "c64x/c64xdec.h"
-# endif
-
-# if !defined(oc_dec_accel_init)
-#  define oc_dec_accel_init oc_dec_accel_init_c
-# endif
-# if defined(OC_DEC_USE_VTABLE)
-#  if !defined(oc_dec_dc_unpredict_mcu_plane)
-#   define oc_dec_dc_unpredict_mcu_plane(_dec,_pipe,_pli) \
- ((*(_dec)->opt_vtable.dc_unpredict_mcu_plane)(_dec,_pipe,_pli))
+#  if defined(OC_C64X_ASM)
+#    include "c64x/c64xdec.h"
 #  endif
-# else
-#  if !defined(oc_dec_dc_unpredict_mcu_plane)
-#   define oc_dec_dc_unpredict_mcu_plane oc_dec_dc_unpredict_mcu_plane_c
+
+#  if !defined(oc_dec_accel_init)
+#    define oc_dec_accel_init oc_dec_accel_init_c
 #  endif
-# endif
-
-
+#  if defined(OC_DEC_USE_VTABLE)
+#    if !defined(oc_dec_dc_unpredict_mcu_plane)
+#      define oc_dec_dc_unpredict_mcu_plane(_dec, _pipe, _pli)                                     \
+        ((*(_dec)->opt_vtable.dc_unpredict_mcu_plane)(_dec, _pipe, _pli))
+#    endif
+#  else
+#    if !defined(oc_dec_dc_unpredict_mcu_plane)
+#      define oc_dec_dc_unpredict_mcu_plane oc_dec_dc_unpredict_mcu_plane_c
+#    endif
+#  endif
 
 /*Constants for the packet-in state machine specific to the decoder.*/
 
 /*Next packet to read: Data packet.*/
-#define OC_PACKET_DATA (0)
+#  define OC_PACKET_DATA (0)
 
-
-
-struct th_setup_info{
+struct th_setup_info {
   /*The Huffman codes.*/
-  ogg_int16_t   *huff_tables[TH_NHUFFMAN_TABLES];
+  ogg_int16_t  *huff_tables[TH_NHUFFMAN_TABLES];
   /*The quantization parameters.*/
-  th_quant_info  qinfo;
+  th_quant_info qinfo;
 };
-
-
 
 /*Decoder specific functions with accelerated variants.*/
-struct oc_dec_opt_vtable{
-  void (*dc_unpredict_mcu_plane)(oc_dec_ctx *_dec,
-   oc_dec_pipeline_state *_pipe,int _pli);
+struct oc_dec_opt_vtable {
+  void (*dc_unpredict_mcu_plane)(oc_dec_ctx *_dec, oc_dec_pipeline_state *_pipe, int _pli);
 };
 
-
-
-struct oc_dec_pipeline_state{
+struct oc_dec_pipeline_state {
   /*Decoded DCT coefficients.
     These are placed here instead of on the stack so that they can persist
      between blocks, which makes clearing them back to zero much faster when
@@ -111,75 +100,73 @@ struct oc_dec_pipeline_state{
   int                 pp_level;
 };
 
-
-struct th_dec_ctx{
+struct th_dec_ctx {
   /*Shared encoder/decoder state.*/
-  oc_theora_state        state;
+  oc_theora_state       state;
   /*Whether or not packets are ready to be emitted.
     This takes on negative values while there are remaining header packets to
      be emitted, reaches 0 when the codec is ready for input, and goes to 1
      when a frame has been processed and a data packet is ready.*/
-  int                    packet_state;
+  int                   packet_state;
   /*Buffer in which to assemble packets.*/
-  oc_pack_buf            opb;
+  oc_pack_buf           opb;
   /*Huffman decode trees.*/
-  ogg_int16_t           *huff_tables[TH_NHUFFMAN_TABLES];
+  ogg_int16_t          *huff_tables[TH_NHUFFMAN_TABLES];
   /*The index of the first token in each plane for each coefficient.*/
-  ptrdiff_t              ti0[3][64];
+  ptrdiff_t             ti0[3][64];
   /*The number of outstanding EOB runs at the start of each coefficient in each
      plane.*/
-  ptrdiff_t              eob_runs[3][64];
+  ptrdiff_t             eob_runs[3][64];
   /*The DCT token lists.*/
-  unsigned char         *dct_tokens;
+  unsigned char        *dct_tokens;
   /*The extra bits associated with DCT tokens.*/
-  unsigned char         *extra_bits;
+  unsigned char        *extra_bits;
   /*The number of dct tokens unpacked so far.*/
-  int                    dct_tokens_count;
+  int                   dct_tokens_count;
   /*The out-of-loop post-processing level.*/
-  int                    pp_level;
+  int                   pp_level;
   /*The DC scale used for out-of-loop deblocking.*/
-  int                    pp_dc_scale[64];
+  int                   pp_dc_scale[64];
   /*The sharpen modifier used for out-of-loop deringing.*/
-  int                    pp_sharp_mod[64];
+  int                   pp_sharp_mod[64];
   /*The DC quantization index of each block.*/
-  unsigned char         *dc_qis;
+  unsigned char        *dc_qis;
   /*The variance of each block.*/
-  int                   *variances;
+  int                  *variances;
   /*The storage for the post-processed frame buffer.*/
-  unsigned char         *pp_frame_data;
+  unsigned char        *pp_frame_data;
   /*Whether or not the post-processsed frame buffer has space for chroma.*/
-  int                    pp_frame_state;
+  int                   pp_frame_state;
   /*The buffer used for the post-processed frame.
     Note that this is _not_ guaranteed to have the same strides and offsets as
      the reference frame buffers.*/
-  th_ycbcr_buffer        pp_frame_buf;
+  th_ycbcr_buffer       pp_frame_buf;
   /*The striped decode callback function.*/
-  th_stripe_callback     stripe_cb;
-  oc_dec_pipeline_state  pipe;
-# if defined(OC_DEC_USE_VTABLE)
+  th_stripe_callback    stripe_cb;
+  oc_dec_pipeline_state pipe;
+#  if defined(OC_DEC_USE_VTABLE)
   /*Table for decoder acceleration functions.*/
-  oc_dec_opt_vtable      opt_vtable;
-# endif
-# if defined(HAVE_CAIRO)
+  oc_dec_opt_vtable opt_vtable;
+#  endif
+#  if defined(HAVE_CAIRO)
   /*Output metrics for debugging.*/
-  int                    telemetry_mbmode;
-  int                    telemetry_mv;
-  int                    telemetry_qi;
-  int                    telemetry_bits;
-  int                    telemetry_frame_bytes;
-  int                    telemetry_coding_bytes;
-  int                    telemetry_mode_bytes;
-  int                    telemetry_mv_bytes;
-  int                    telemetry_qi_bytes;
-  int                    telemetry_dc_bytes;
-  unsigned char         *telemetry_frame_data;
-# endif
+  int            telemetry_mbmode;
+  int            telemetry_mv;
+  int            telemetry_qi;
+  int            telemetry_bits;
+  int            telemetry_frame_bytes;
+  int            telemetry_coding_bytes;
+  int            telemetry_mode_bytes;
+  int            telemetry_mv_bytes;
+  int            telemetry_qi_bytes;
+  int            telemetry_dc_bytes;
+  unsigned char *telemetry_frame_data;
+#  endif
 };
 
 /*Default pure-C implementations of decoder-specific accelerated functions.*/
 void oc_dec_accel_init_c(oc_dec_ctx *_dec);
 
-void oc_dec_dc_unpredict_mcu_plane_c(oc_dec_ctx *_dec,
- oc_dec_pipeline_state *_pipe,int _pli);
+void oc_dec_dc_unpredict_mcu_plane_c(oc_dec_ctx *_dec, oc_dec_pipeline_state *_pipe, int _pli);
 
 #endif

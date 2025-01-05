@@ -1,34 +1,12 @@
-/********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
- * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *
- * by the Xiph.Org Foundation http://www.xiph.org/                  *
- *                                                                  *
- ********************************************************************
+#pragma once
 
-  function:
-  last mod: $Id: theora.h,v 1.8 2004/03/15 22:17:32 derf Exp $
+#include "codec.h"
+#include <ogg/ogg.h>
+#include <stddef.h>
 
- ********************************************************************/
-
-/**\file
- * The <tt>libtheoraenc</tt> C encoding API.*/
-
-#if !defined(_O_THEORA_THEORAENC_H_)
-# define _O_THEORA_THEORAENC_H_ (1)
-# include <stddef.h>
-# include <ogg/ogg.h>
-# include "codec.h"
-
-#if defined(__cplusplus)
+#ifdef __cplusplus
 extern "C" {
 #endif
-
-
 
 /**\name th_encode_ctl() codes
  * \anchor encctlcodes
@@ -50,7 +28,7 @@ extern "C" {
  *                     non-<tt>NULL</tt> and \a _buf_sz is not
  *                     <tt>sizeof(#th_huff_code)*#TH_NHUFFMAN_TABLES*#TH_NDCT_TOKENS</tt>.
  * \retval TH_EIMPL   Not supported by this implementation.*/
-#define TH_ENCCTL_SET_HUFFMAN_CODES (0)
+#define TH_ENCCTL_SET_HUFFMAN_CODES            (0)
 /**Sets the quantization parameters to use.
  * The parameters are copied, not stored by reference, so they can be freed
  *  after this call.
@@ -63,7 +41,7 @@ extern "C" {
  *                    or \a _buf is non-<tt>NULL</tt> and
  *                    \a _buf_sz is not <tt>sizeof(#th_quant_info)</tt>.
  * \retval TH_EIMPL   Not supported by this implementation.*/
-#define TH_ENCCTL_SET_QUANT_PARAMS (2)
+#define TH_ENCCTL_SET_QUANT_PARAMS             (2)
 /**Sets the maximum distance between key frames.
  * This can be changed during an encode, but will be bounded by
  *  <tt>1<<th_info#keyframe_granule_shift</tt>.
@@ -104,7 +82,7 @@ extern "C" {
  * \retval TH_EFAULT \a _enc or \a _buf is <tt>NULL</tt>.
  * \retval TH_EINVAL \a _buf_sz is not <tt>sizeof(int)</tt>.
  * \retval TH_EIMPL   Not supported by this implementation.*/
-#define TH_ENCCTL_SET_VP3_COMPATIBLE (10)
+#define TH_ENCCTL_SET_VP3_COMPATIBLE           (10)
 /**Gets the maximum speed level.
  * Higher speed levels favor quicker encoding over better quality per bit.
  * Depending on the encoding mode, and the internal algorithms used, quality
@@ -118,7 +96,7 @@ extern "C" {
  * \retval TH_EINVAL \a _buf_sz is not <tt>sizeof(int)</tt>.
  * \retval TH_EIMPL   Not supported by this implementation in the current
  *                    encoding mode.*/
-#define TH_ENCCTL_GET_SPLEVEL_MAX (12)
+#define TH_ENCCTL_GET_SPLEVEL_MAX              (12)
 /**Sets the speed level.
  * The current speed level may be retrieved using #TH_ENCCTL_GET_SPLEVEL.
  *
@@ -132,7 +110,7 @@ extern "C" {
  *                    obtained via #TH_ENCCTL_GET_SPLEVEL_MAX.
  * \retval TH_EIMPL   Not supported by this implementation in the current
  *                    encoding mode.*/
-#define TH_ENCCTL_SET_SPLEVEL (14)
+#define TH_ENCCTL_SET_SPLEVEL                  (14)
 /**Gets the current speed level.
  * The default speed level may vary according to encoder implementation, but if
  *  this control code is not supported (it returns #TH_EIMPL), the default may
@@ -146,7 +124,7 @@ extern "C" {
  * \retval TH_EINVAL \a _buf_sz is not <tt>sizeof(int)</tt>.
  * \retval TH_EIMPL   Not supported by this implementation in the current
  *                    encoding mode.*/
-#define TH_ENCCTL_GET_SPLEVEL (16)
+#define TH_ENCCTL_GET_SPLEVEL                  (16)
 /**Sets the number of duplicates of the next frame to produce.
  * Although libtheora can encode duplicate frames very cheaply, it costs some
  *  amount of CPU to detect them, and a run of duplicates cannot span a
@@ -172,7 +150,7 @@ extern "C" {
  *                    ever wish to insert prior to encoding.
  * \retval TH_EIMPL   Not supported by this implementation in the current
  *                    encoding mode.*/
-#define TH_ENCCTL_SET_DUP_COUNT (18)
+#define TH_ENCCTL_SET_DUP_COUNT                (18)
 /**Modifies the default bitrate management behavior.
  * Use to allow or disallow frame dropping, and to enable or disable capping
  *  bit reservoir overflows and underflows.
@@ -192,7 +170,7 @@ extern "C" {
  *                    is not enabled.
  * \retval TH_EIMPL   Not supported by this implementation in the current
  *                    encoding mode.*/
-#define TH_ENCCTL_SET_RATE_FLAGS (20)
+#define TH_ENCCTL_SET_RATE_FLAGS               (20)
 /**Sets the size of the bitrate management bit reservoir as a function
  *  of number of frames.
  * The reservoir size affects how quickly bitrate management reacts to
@@ -218,7 +196,7 @@ extern "C" {
  *                    will be adjusted to match the actual value set.
  * \retval TH_EIMPL   Not supported by this implementation in the current
  *                    encoding mode.*/
-#define TH_ENCCTL_SET_RATE_BUFFER (22)
+#define TH_ENCCTL_SET_RATE_BUFFER              (22)
 /**Enable pass 1 of two-pass encoding mode and retrieve the first pass metrics.
  * Pass 1 mode must be enabled before the first frame is encoded, and a target
  *  bitrate must have already been specified to the encoder.
@@ -248,7 +226,7 @@ extern "C" {
  *                    bitrate has been set, or the first call was made after
  *                    the first frame was submitted for encoding.
  * \retval TH_EIMPL   Not supported by this implementation.*/
-#define TH_ENCCTL_2PASS_OUT (24)
+#define TH_ENCCTL_2PASS_OUT                    (24)
 /**Submits two-pass encoding metric data collected the first encoding pass to
  *  the second pass.
  * The first call must be made before the first frame is encoded, and a target
@@ -294,7 +272,7 @@ extern "C" {
  *                        has the placeholder data in place of the summary
  *                        data.
  * \retval TH_EIMPL       Not supported by this implementation.*/
-#define TH_ENCCTL_2PASS_IN (26)
+#define TH_ENCCTL_2PASS_IN                     (26)
 /**Sets the current encoding quality.
  * This is only valid so long as no bitrate has been specified, either through
  *  the #th_info struct used to initialize the encoder or through
@@ -310,7 +288,7 @@ extern "C" {
  * \retval TH_EINVAL     A target bitrate has already been specified, or the
  *                        quality index was not in the range 0...63.
  * \retval TH_EIMPL       Not supported by this implementation.*/
-#define TH_ENCCTL_SET_QUALITY (28)
+#define TH_ENCCTL_SET_QUALITY                  (28)
 /**Sets the current encoding bitrate.
  * Once a bitrate is set, the encoder must use a rate-controlled mode for all
  *  future frames (this restriction may be relaxed in a future version).
@@ -335,7 +313,7 @@ extern "C" {
  *                        quality-based mode, in which case this function will
  *                        not return an error for that value.
  * \retval TH_EIMPL      Not supported by this implementation.*/
-#define TH_ENCCTL_SET_BITRATE (30)
+#define TH_ENCCTL_SET_BITRATE                  (30)
 /**Sets the configuration to be compatible with that from the given setup
  *  header.
  * This sets the Huffman codebooks and quantization parameters to match those
@@ -375,10 +353,9 @@ extern "C" {
  * \retval TH_EBADHEADER \a _buf did not contain a valid setup header packet.
  * \retval TH_ENOTFORMAT \a _buf did not contain a Theora header at all.
  * \retval TH_EIMPL   Not supported by this implementation.*/
-#define TH_ENCCTL_SET_COMPAT_CONFIG (32)
+#define TH_ENCCTL_SET_COMPAT_CONFIG            (32)
 
 /*@}*/
-
 
 /**\name TH_ENCCTL_SET_RATE_FLAGS flags
  * \anchor ratectlflags
@@ -406,16 +383,11 @@ extern "C" {
 #define TH_RATECTL_CAP_UNDERFLOW (0x4)
 /*@}*/
 
-
-
 /**The quantization parameters used by VP3.*/
 extern const th_quant_info TH_VP31_QUANT_INFO;
 
 /**The Huffman tables used by VP3.*/
-extern const th_huff_code
- TH_VP31_HUFF_CODES[TH_NHUFFMAN_TABLES][TH_NDCT_TOKENS];
-
-
+extern const th_huff_code TH_VP31_HUFF_CODES[TH_NHUFFMAN_TABLES][TH_NDCT_TOKENS];
 
 /**\name Encoder state
    The following data structure is opaque, and its contents are not publicly
@@ -424,10 +396,8 @@ extern const th_huff_code
     warning.*/
 /*@{*/
 /**The encoder context.*/
-typedef struct th_enc_ctx    th_enc_ctx;
+typedef struct th_enc_ctx th_enc_ctx;
 /*@}*/
-
-
 
 /**\defgroup encfuncs Functions for Encoding*/
 /*@{*/
@@ -466,7 +436,7 @@ extern th_enc_ctx *th_encode_alloc(const th_info *_info);
  * \return Possible return values depend on the control code used.
  *          See \ref encctlcodes "the list of control codes" for
  *          specific values. Generally 0 indicates success.*/
-extern int th_encode_ctl(th_enc_ctx *_enc,int _req,void *_buf,size_t _buf_sz);
+extern int         th_encode_ctl(th_enc_ctx *_enc, int _req, void *_buf, size_t _buf_sz);
 /**Outputs the next header packet.
  * This should be called repeatedly after encoder initialization until it
  *  returns 0 in order to get all of the header packets, in order, before
@@ -484,8 +454,7 @@ extern int th_encode_ctl(th_enc_ctx *_enc,int _req,void *_buf,size_t _buf_sz);
  *          produced.
  * \retval 0         No packet was produced, and no more header packets remain.
  * \retval TH_EFAULT \a _enc, \a _comments, or \a _op was <tt>NULL</tt>.*/
-extern int th_encode_flushheader(th_enc_ctx *_enc,
- th_comment *_comments,ogg_packet *_op);
+extern int         th_encode_flushheader(th_enc_ctx *_enc, th_comment *_comments, ogg_packet *_op);
 /**Submits an uncompressed frame to the encoder.
  * \param _enc   A #th_enc_ctx handle.
  * \param _ycbcr A buffer of Y'CbCr data to encode.
@@ -508,7 +477,7 @@ extern int th_encode_flushheader(th_enc_ctx *_enc,
  * \retval TH_EINVAL The buffer size matches neither the frame size nor the
  *                    picture size the encoder was initialized with, or
  *                    encoding has already completed.*/
-extern int th_encode_ycbcr_in(th_enc_ctx *_enc,th_ycbcr_buffer _ycbcr);
+extern int         th_encode_ycbcr_in(th_enc_ctx *_enc, th_ycbcr_buffer _ycbcr);
 /**Retrieves encoded video data packets.
  * This should be called repeatedly after each frame is submitted to flush any
  *  encoded packets, until it returns 0.
@@ -532,17 +501,13 @@ extern int th_encode_ycbcr_in(th_enc_ctx *_enc,th_ycbcr_buffer _ycbcr);
  * \retval 0         No packet was produced, and no more encoded video data
  *                    remains.
  * \retval TH_EFAULT \a _enc or \a _op was <tt>NULL</tt>.*/
-extern int th_encode_packetout(th_enc_ctx *_enc,int _last,ogg_packet *_op);
+extern int         th_encode_packetout(th_enc_ctx *_enc, int _last, ogg_packet *_op);
 /**Frees an allocated encoder instance.
  * \param _enc A #th_enc_ctx handle.*/
-extern void th_encode_free(th_enc_ctx *_enc);
+extern void        th_encode_free(th_enc_ctx *_enc);
 /*@}*/
 /*@}*/
 
-
-
-#if defined(__cplusplus)
+#ifdef __cplusplus
 }
-#endif
-
 #endif

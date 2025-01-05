@@ -1,104 +1,25 @@
-/********************************************************************
- *                                                                  *
- * THIS FILE IS PART OF THE OggTheora SOFTWARE CODEC SOURCE CODE.   *
- * USE, DISTRIBUTION AND REPRODUCTION OF THIS LIBRARY SOURCE IS     *
- * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
- * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
- *                                                                  *
- * THE Theora SOURCE CODE IS COPYRIGHT (C) 2002-2009                *
- * by the Xiph.Org Foundation http://www.xiph.org/                  *
- *                                                                  *
- ********************************************************************
+#pragma once
+#include <ogg/ogg.h>
 
-  function:
-  last mod: $Id: theora.h,v 1.8 2004/03/15 22:17:32 derf Exp $
-
- ********************************************************************/
-
-/**\mainpage
- *
- * \section intro Introduction
- *
- * This is the documentation for the <tt>libtheora</tt> C API.
- *
- * The \c libtheora package is the current reference
- * implementation for <a href="http://www.theora.org/">Theora</a>, a free,
- * patent-unencumbered video codec.
- * Theora is derived from On2's VP3 codec with additional features and
- *  integration with Ogg multimedia formats by
- *  <a href="http://www.xiph.org/">the Xiph.Org Foundation</a>.
- * Complete documentation of the format itself is available in
- * <a href="http://www.theora.org/doc/Theora.pdf">the Theora
- *  specification</a>.
- *
- * \section Organization
- *
- * The functions documented here are divided between two
- * separate libraries:
- * - \c libtheoraenc contains the encoder interface,
- *   described in \ref encfuncs.
- * - \c libtheoradec contains the decoder interface,
- *   described in \ref decfuncs, \n
- *   and additional \ref basefuncs.
- *
- * New code should link to \c libtheoradec. If using encoder
- * features, it must also link to \c libtheoraenc.
- *
- * During initial development, prior to the 1.0 release,
- * \c libtheora exported a different \ref oldfuncs which
- * combined both encode and decode functions.
- * In general, legacy API symbols can be indentified
- * by their \c theora_ or \c OC_ namespace prefixes.
- * The current API uses \c th_ or \c TH_ instead.
- *
- * While deprecated, \c libtheoraenc and \c libtheoradec
- * together export the legacy api as well at the one documented above.
- * Likewise, the legacy \c libtheora included with this package
- * exports the new 1.x API. Older code and build scripts can therefore
- * but updated independently to the current scheme.
- */
-
-/**\file
- * The shared <tt>libtheoradec</tt> and <tt>libtheoraenc</tt> C API.
- * You don't need to include this directly.*/
-
-#if !defined(_O_THEORA_CODEC_H_)
-# define _O_THEORA_CODEC_H_ (1)
-# include <ogg/ogg.h>
-
-#if defined(__cplusplus)
+#ifdef __cplusplus
 extern "C" {
 #endif
 
-
-
-/**\name Return codes*/
-/*@{*/
-/**An invalid pointer was provided.*/
-#define TH_EFAULT     (-1)
-/**An invalid argument was provided.*/
-#define TH_EINVAL     (-10)
-/**The contents of the header were incomplete, invalid, or unexpected.*/
-#define TH_EBADHEADER (-20)
-/**The header does not belong to a Theora stream.*/
-#define TH_ENOTFORMAT (-21)
-/**The bitstream version is too high.*/
-#define TH_EVERSION   (-22)
-/**The specified function is not implemented.*/
-#define TH_EIMPL      (-23)
-/**There were errors in the video data packet.*/
-#define TH_EBADPACKET (-24)
-/**The decoded packet represented a dropped frame.
-   The player can continue to display the current frame, as the contents of the
-    decoded frame buffer have not changed.*/
-#define TH_DUPFRAME   (1)
-/*@}*/
+#define TH_EFAULT     (-1)  // An invalid pointer was provided.
+#define TH_EINVAL     (-10) // An invalid argument was provided.
+#define TH_EBADHEADER (-20) // The contents of the header were incomplete, invalid, or unexpected.
+#define TH_ENOTFORMAT (-21) // The header does not belong to a Theora stream.
+#define TH_EVERSION   (-22) // The bitstream version is too high.
+#define TH_EIMPL      (-23) // The specified function is not implemented.
+#define TH_EBADPACKET (-24) // There were errors in the video data packet.
+#define TH_DUPFRAME   (1)   // The decoded packet represented a dropped frame.
+// The player can continue to display the current frame, as the contents of the decoded frame buffer have not changed.
 
 /**The currently defined color space tags.
  * See <a href="http://www.theora.org/doc/Theora.pdf">the Theora
  *  specification</a>, Chapter 4, for exact details on the meaning
  *  of each of these color spaces.*/
-typedef enum{
+typedef enum {
   /**The color space was not specified at the encoder.
       It may be conveyed by an external means.*/
   TH_CS_UNSPECIFIED,
@@ -108,13 +29,13 @@ typedef enum{
   TH_CS_ITU_REC_470BG,
   /**The total number of currently defined color spaces.*/
   TH_CS_NSPACES
-}th_colorspace;
+} th_colorspace;
 
 /**The currently defined pixel format tags.
  * See <a href="http://www.theora.org/doc/Theora.pdf">the Theora
  *  specification</a>, Section 4.4, for details on the precise sample
  *  locations.*/
-typedef enum{
+typedef enum {
   /**Chroma decimation by 2 in both the X and Y directions (4:2:0).
      The Cb and Cr chroma planes are half the width and half the
       height of the luma plane.*/
@@ -130,9 +51,7 @@ typedef enum{
   TH_PF_444,
   /**The total number of currently defined pixel formats.*/
   TH_PF_NFORMATS
-}th_pixel_fmt;
-
-
+} th_pixel_fmt;
 
 /**A buffer for a single color plane in an uncompressed image.
  * This contains the image data in a left-to-right, top-down format.
@@ -142,7 +61,7 @@ typedef enum{
  * The encoder accepts both positive \a stride values (top-down in memory)
  *  and negative (bottom-up in memory).
  * The decoder currently always generates images with positive strides.*/
-typedef struct{
+typedef struct {
   /**The width of this plane.*/
   int            width;
   /**The height of this plane.*/
@@ -151,7 +70,7 @@ typedef struct{
   int            stride;
   /**A pointer to the beginning of the first row.*/
   unsigned char *data;
-}th_img_plane;
+} th_img_plane;
 
 /**A complete image buffer for an uncompressed frame.
  * The chroma planes may be decimated by a factor of two in either
@@ -204,7 +123,7 @@ typedef th_img_plane th_ycbcr_buffer[3];
  *  the overall frame itself.
  * The frame aspect ratio can be computed from pixel aspect ratio using the
  *  image dimensions.*/
-typedef struct{
+typedef struct {
   /**\name Theora version
    * Bitstream version information.*/
   /*@{*/
@@ -297,7 +216,7 @@ typedef struct{
    *  but it cannot be set larger than the amount permitted by this field after
    *  the headers have been output.*/
   int           keyframe_granule_shift;
-}th_info;
+} th_info;
 
 /**The comment information.
  *
@@ -323,7 +242,7 @@ typedef struct{
  *  possibly containing null characters, so the length array should be
  *  treated as their authoritative length.
  */
-typedef struct th_comment{
+typedef struct th_comment {
   /**The array of comment string vectors.*/
   char **user_comments;
   /**An array of the corresponding length of each vector, in bytes.*/
@@ -333,15 +252,13 @@ typedef struct th_comment{
   /**The null-terminated vendor string.
      This identifies the software used to encode the stream.*/
   char  *vendor;
-}th_comment;
-
-
+} th_comment;
 
 /**A single base matrix.*/
 typedef unsigned char th_quant_base[64];
 
 /**A set of \a qi ranges.*/
-typedef struct{
+typedef struct {
   /**The number of ranges in the set.*/
   int                  nranges;
   /**The size of each of the #nranges ranges.
@@ -350,7 +267,7 @@ typedef struct{
   /**#nranges <tt>+1</tt> base matrices.
      Matrices \a i and <tt>i+1</tt> form the endpoints of range \a i.*/
   const th_quant_base *base_matrices;
-}th_quant_ranges;
+} th_quant_ranges;
 
 /**A complete set of quantization parameters.
    The quantizer for each coefficient is calculated as:
@@ -409,7 +326,7 @@ typedef struct{
    These two conditions ensure that the actual quantizer for a given \a qti,
     \a pli, and \a ci does not increase as \a qi increases.
    This is not required by the decoder.*/
-typedef struct{
+typedef struct {
   /**The DC scaling factors.*/
   ogg_uint16_t    dc_scale[64];
   /**The AC scaling factors.*/
@@ -418,9 +335,7 @@ typedef struct{
   unsigned char   loop_filter_limits[64];
   /**The \a qi ranges for each \a ci and \a pli.*/
   th_quant_ranges qi_ranges[2][3];
-}th_quant_info;
-
-
+} th_quant_info;
 
 /**The number of Huffman tables used by Theora.*/
 #define TH_NHUFFMAN_TABLES (80)
@@ -438,16 +353,14 @@ typedef struct{
  * The complete table in the first group of 16 does not have to be in the same
  *  place as the complete table in the other groups, but the complete tables in
  *  the remaining four groups must all be in the same place.*/
-typedef struct{
+typedef struct {
   /**The bit pattern for the code, with the LSbit of the pattern aligned in
    *   the LSbit of the word.*/
   ogg_uint32_t pattern;
   /**The number of bits in the code.
    * This must be between 0 and 32, inclusive.*/
   int          nbits;
-}th_huff_code;
-
-
+} th_huff_code;
 
 /**\defgroup basefuncs Functions Shared by Encode and Decode*/
 /*@{*/
@@ -462,7 +375,7 @@ typedef struct{
 /**Retrieves a human-readable string to identify the library vendor and
  *  version.
  * \return the version string.*/
-extern const char *th_version_string(void);
+extern const char  *th_version_string(void);
 /**Retrieves the library version number.
  * This is the highest bitstream version that the encoder library will produce,
  *  or that the decoder library can decode.
@@ -482,7 +395,7 @@ extern ogg_uint32_t th_version_number(void);
  * \param _granpos The granule position to convert.
  * \returns The absolute frame index corresponding to \a _granpos.
  * \retval -1 The given granule position was invalid (i.e. negative).*/
-extern ogg_int64_t th_granule_frame(void *_encdec,ogg_int64_t _granpos);
+extern ogg_int64_t  th_granule_frame(void *_encdec, ogg_int64_t _granpos);
 /**Converts a granule position to an absolute time in seconds.
  * The granule position is interpreted in the context of a given
  *  #th_enc_ctx or #th_dec_ctx handle (either will suffice).
@@ -494,7 +407,7 @@ extern ogg_int64_t th_granule_frame(void *_encdec,ogg_int64_t _granpos);
  *          be displayed.
  *         It is not the presentation time.
  * \retval -1 The given granule position was invalid (i.e. negative).*/
-extern double th_granule_time(void *_encdec,ogg_int64_t _granpos);
+extern double       th_granule_time(void *_encdec, ogg_int64_t _granpos);
 /**Determines whether a Theora packet is a header or not.
  * This function does no verification beyond checking the packet type bit, so
  *  it should not be used for bitstream identification; use
@@ -504,7 +417,7 @@ extern double th_granule_time(void *_encdec,ogg_int64_t _granpos);
  * \param _op An <tt>ogg_packet</tt> containing encoded Theora data.
  * \retval 1 The packet is a header packet
  * \retval 0 The packet is a video data packet.*/
-extern int th_packet_isheader(ogg_packet *_op);
+extern int          th_packet_isheader(ogg_packet *_op);
 /**Determines whether a theora packet is a key frame or not.
  * This function does no verification beyond checking the packet type and
  *  key frame bits, so it should not be used for bitstream identification; use
@@ -515,9 +428,8 @@ extern int th_packet_isheader(ogg_packet *_op);
  * \retval 1  The packet contains a key frame.
  * \retval 0  The packet contains a delta frame.
  * \retval -1 The packet is not a video data packet.*/
-extern int th_packet_iskeyframe(ogg_packet *_op);
+extern int          th_packet_iskeyframe(ogg_packet *_op);
 /*@}*/
-
 
 /**\name Functions for manipulating header data
  * These functions manipulate the #th_info and #th_comment structures
@@ -541,7 +453,7 @@ extern void th_info_clear(th_info *_info);
  * This should be called on a freshly allocated #th_comment structure
  *  before attempting to use it.
  * \param _tc The #th_comment struct to initialize.*/
-extern void th_comment_init(th_comment *_tc);
+extern void  th_comment_init(th_comment *_tc);
 /**Add a comment to an initialized #th_comment structure.
  * \note Neither th_comment_add() nor th_comment_add_tag() support
  *  comments containing null values, although the bitstream format does
@@ -551,7 +463,7 @@ extern void th_comment_init(th_comment *_tc);
  * \param _tc      The #th_comment struct to add the comment to.
  * \param _comment Must be a null-terminated UTF-8 string containing the
  *                  comment in "TAG=the value" form.*/
-extern void th_comment_add(th_comment *_tc,const char *_comment);
+extern void  th_comment_add(th_comment *_tc, const char *_comment);
 /**Add a comment to an initialized #th_comment structure.
  * \note Neither th_comment_add() nor th_comment_add_tag() support
  *  comments containing null values, although the bitstream format does
@@ -562,8 +474,7 @@ extern void th_comment_add(th_comment *_tc,const char *_comment);
  * \param _tag A null-terminated string containing the tag associated with
  *              the comment.
  * \param _val The corresponding value as a null-terminated string.*/
-extern void th_comment_add_tag(th_comment *_tc,const char *_tag,
- const char *_val);
+extern void  th_comment_add_tag(th_comment *_tc, const char *_tag, const char *_val);
 /**Look up a comment value by its tag.
  * \param _tc    An initialized #th_comment structure.
  * \param _tag   The tag to look up.
@@ -579,7 +490,7 @@ extern void th_comment_add_tag(th_comment *_tc,const char *_tag,
  *         It should not be modified or freed by the application, and
  *          modifications to the structure may invalidate the pointer.
  * \retval NULL If no matching tag is found.*/
-extern char *th_comment_query(th_comment *_tc,const char *_tag,int _count);
+extern char *th_comment_query(th_comment *_tc, const char *_tag, int _count);
 /**Look up the number of instances of a tag.
  * Call this first when querying for a specific tag and then iterate over the
  *  number of instances with separate calls to th_comment_query() to
@@ -587,20 +498,16 @@ extern char *th_comment_query(th_comment *_tc,const char *_tag,int _count);
  * \param _tc    An initialized #th_comment structure.
  * \param _tag   The tag to look up.
  * \return The number of instances of this particular tag.*/
-extern int th_comment_query_count(th_comment *_tc,const char *_tag);
+extern int   th_comment_query_count(th_comment *_tc, const char *_tag);
 /**Clears a #th_comment structure.
  * This should be called on a #th_comment structure after it is no longer
  *  needed.
  * It will free all memory used by the structure members.
  * \param _tc The #th_comment struct to clear.*/
-extern void th_comment_clear(th_comment *_tc);
+extern void  th_comment_clear(th_comment *_tc);
 /*@}*/
 /*@}*/
 
-
-
-#if defined(__cplusplus)
+#ifdef __cplusplus
 }
-#endif
-
 #endif
